@@ -70,22 +70,19 @@ Este script realiza:
 
 ### 📍 Etapa 2
 
-- **Leitura de Instâncias MCGRP**: O código lê arquivos `.dat` formatados para instâncias do MCGRP, extraindo informações como capacidade do veículo, nó de depósito, número de vértices, e detalhes dos serviços requeridos (nós, arestas, arcos) e não requeridos (arestas e arcos).
-- **Construção do Grafo**: A partir dos dados lidos, constrói uma representação do grafo, incluindo a matriz de adjacência e os custos diretos entre os nós.
-- **Cálculo de Caminhos Mínimos**: Utiliza o algoritmo de Floyd-Warshall para calcular as distâncias e predecessores de todos os pares de vértices no grafo[cite: 20]. Este é um passo importante, pois muitas métricas do grafo utilizam os resultados da matriz de caminhos mais curtos de múltiplas fontes[cite: 19].
-- **Heurística do Vizinho Mais Próximo (VM) para Solução Inicial**:
-    - O algoritmo é construtivo, iniciando com uma solução vazia e adicionando iterações até construir uma solução que atenda a todas as restrições do problema[cite: 22].
-    - Para cada rota, o veículo parte do depósito com sua capacidade máxima.
-    - Ele identifica o serviço não atendido mais próximo e viável (cuja demanda não excede a capacidade atual do veículo).
-    - O custo para alcançar o início do serviço é adicionado ao custo total da rota, juntamente com o custo de percurso e o custo de serviço do próprio serviço.
-    - A demanda do serviço é subtraída da capacidade atual do veículo, e o serviço é marcado como atendido.
-    - O veículo se move para o nó final do serviço atendido e continua buscando o próximo serviço mais próximo e viável a partir de sua localização atual.
-    - Caso uma rota passe mais de uma vez por um vértice, ou uma aresta, ou um arco requeridos, o valor de demanda do serviço e seu custo de serviço devem ser contados apenas 1 vez[cite: 24].
-    - Este processo se repete até que nenhum outro serviço possa ser adicionado à rota ou todos os serviços tenham sido atendidos.
-    - A rota é então finalizada com o retorno do veículo ao depósito.
-    - A solução garante que a capacidade dos veículos não seja ultrapassada em cada rota e que cada serviço seja executado por exatamente uma rota[cite: 23, 24].
-- **Geração de Saída**: As soluções (custo total, número de rotas, tempo de execução em ciclos de CPU e tempo de referência) são salvas em arquivos `.dat` individuais na pasta `solucoes_individuais` (ou `solucoes` se a parte comentada em `main` for ativada), com o formato `sol-<nome_instancia>.dat`[cite: 29]. As soluções devem seguir um padrão de nomenclatura específico[cite: 29].
-- **Medição de Tempo**: O tempo de execução do algoritmo é medido em ciclos de CPU utilizando `__rdtsc()` para análise de desempenho. Para comparação, o código também lê um valor de referência de tempo do arquivo `reference_values.csv`.
+- **Leitura de Instâncias MCGRP**: O código lê arquivos .dat formatados para instâncias do MCGRP, extraindo informações como capacidade dos veículos, depósito, número de vértices e detalhes sobre serviços requeridos (nós, arestas, arcos) e não requeridos.
+- **Construção do Grafo**: Com os dados extraídos, o grafo é construído utilizando uma matriz de adjacência que representa os custos diretos entre os nós.
+- **Cálculo de Caminhos Mínimos**: Utiliza o algoritmo de Floyd-Warshall para calcular distâncias e predecessores entre todos os pares de vértices, essenciais para diversas métricas do problema.
+- **Heurística do Vizinho Mais Próximo (VM)**:
+    - Algoritmo construtivo que parte de uma solução vazia e itera até atender todas as restrições.
+    - Cada rota inicia no depósito com capacidade máxima.
+    - O serviço não atendido mais próximo e viável (dentro da capacidade) é selecionado.
+    - Custos de deslocamento e de serviço são acumulados, e a demanda é descontada da capacidade.
+    - O veículo avança para o final do serviço atendido e repete o processo até que nenhum outro serviço possa ser incluído.
+    - Caso um serviço seja visitado mais de uma vez, sua demanda e custo de serviço são contados apenas uma vez.
+    - A rota termina com o retorno ao depósito, garantindo que a capacidade não seja excedida e cada serviço seja atendido por exatamente uma rota.
+- **Geração de Saída**: As soluções geradas (custo total, número de rotas, tempo de CPU e tempo de referência) são salvas em arquivos `.dat` na pasta `solucoes_individuais` (ou solucoes, se alterado no main), seguindo o padrão `sol-<nome_instancia>.dat`.
+- **Medição de Tempo**: O tempo de execução é medido em ciclos de CPU com `__rdtsc()` e comparado com valores de referência extraídos de `reference_values.csv`.
 
 ---
 
