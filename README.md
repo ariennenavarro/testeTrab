@@ -95,6 +95,10 @@ Este script realiza:
 - Python 3.x.
 - As bibliotecas `pandas` e `matplotlib` são utilizadas.
 
+## 📖 Referência
+
+- GOLDBARG, Marco; GOLDBARG, Elizabeth; LUNA, Henrique. **Grafos: conceitos, algoritmos e aplicações**. 2. ed. Rio de Janeiro: Elsevier, 2013.
+
 ## 👨‍💻 Autores
 
 - Arienne Alves Navarro
