@@ -412,12 +412,49 @@ public:
         return max_grau;
     }
 
+    long long lerClockMelhorSolReferenciaDoCSV(const string& nomeInstanciaBase) {
+    ifstream csvFile("C:/Users/User/Documents/GitHub/testeTrab/dados/reference_values.csv"); // Local do arquivo de referencia
+    string linha;
+
+    if (!csvFile.is_open()) {
+        cerr << "Nao foi possivel abrir reference_values.csv" << endl;
+        return 0; 
+    }
+
+    getline(csvFile, linha); // Pula a linha do cabeçalho
+
+    while (getline(csvFile, linha)) {
+        stringstream ss(linha);
+        string campo;
+        vector<string> campos;
+        while(getline(ss, campo, ',')) {
+            campos.push_back(campo);
+        }
+
+        // O CSV tem: Nome, Solucao, #Rotas, clocks, clocks_melhor_sol
+        // "clocks_melhor_sol" é a 5ª coluna (índice 4)
+        if (campos.size() >= 5 && campos[0] == nomeInstanciaBase) {
+            csvFile.close();
+            try {
+                return stoll(campos[4]); // Converte a 5ª coluna para long long
+            } catch (const std::exception& e) {
+                cerr << "Erro ao converter 'clocks_melhor_sol' do CSV para long long: " << campos[4] 
+                     << " para instancia " << nomeInstanciaBase << endl;
+                return 0; // Retorna 0 em caso de erro de conversão
+            }
+        }
+    }
+    csvFile.close();
+    cerr << "AVISO: 'clocks_melhor_sol' nao encontrado para " << nomeInstanciaBase 
+         << " em reference_values.csv. Usando 0 para linha 4." << endl;
+    return 0; 
+}
+
     int getDepot() { return depotNode; }
     int getCapacity() { return vehicleCapacity; }
     vector<Service>& getRequiredServices_ref() { return requiredServices; } // Retorna referência para modificar
     int getCost(int u, int v) { return costs[u][v]; }
     int getShortestPathCost(int u, int v) { return dist[u][v]; }
-    vector<int> getCaminho(int u, int v); // Precisamos criar/adaptar
 
     
     
@@ -431,7 +468,6 @@ public:
     void construirESalvarSolucaoNN(const string& nomeInstancia) {
         
         unsigned long long inicio_total_algoritmo_ciclos, fim_total_algoritmo_ciclos;
-        unsigned long long inicio_heuristica_ciclos, fim_heuristica_ciclos;
 
         // --- INÍCIO DA MEDIÇÃO DO ALGORITMO COMPLETO (PARA LINHA 3) ---
          inicio_total_algoritmo_ciclos = __rdtsc();
@@ -439,8 +475,6 @@ public:
         
         calcularCaminhosMinimosComCustos(); // Garante que os caminhos foram calculados
 
-         // --- INÍCIO DA MEDIÇÃO APENAS DA HEURÍSTICA (PARA LINHA 4) ---
-        inicio_heuristica_ciclos = __rdtsc();
 
         vector<Rota> todasAsRotas; // Vetor para guardar todas as rotas
         int servicosAtendidos = 0;
@@ -497,16 +531,14 @@ public:
             custoTotalSolucao += rotaAtual.custo_total;
         }
 
-          // --- FIM DA MEDIÇÃO APENAS DA HEURÍSTICA ---
-            fim_heuristica_ciclos = __rdtsc();
 
-        // O "algoritmo completo" (parte computacional) termina aqui
-        fim_total_algoritmo_ciclos = fim_heuristica_ciclos; 
-        // (Poderia ser __rdtsc() de novo se houvesse mais trabalho antes de salvar)
+        // O algoritmo termina aqui
+        fim_total_algoritmo_ciclos = __rdtsc();
 
+        unsigned long long ciclos_seu_algoritmo_total = fim_total_algoritmo_ciclos - inicio_total_algoritmo_ciclos;
 
-        unsigned long long ciclos_total_algoritmo = fim_total_algoritmo_ciclos - inicio_total_algoritmo_ciclos;
-        unsigned long long ciclos_para_encontrar_solucao = fim_heuristica_ciclos - inicio_heuristica_ciclos;
+        // Ler o valor da "melhor solução de referência" do CSV para a linha 4
+        long long clock_ref_melhor_sol_csv = lerClockMelhorSolReferenciaDoCSV(nomeInstancia);
       
 
         // --- SALVANDO A SOLUÇÃO NO ARQUIVO ---
@@ -515,13 +547,13 @@ public:
 
         if (!arquivoSaida.is_open()) {
             cerr << "Erro ao criar o arquivo de saida: " << nomeArquivoSaida << endl;
-            return;
-        }
+                return;
+     }
 
         arquivoSaida << custoTotalSolucao << endl;
         arquivoSaida << todasAsRotas.size() << endl;
-        arquivoSaida << ciclos_total_algoritmo << endl;          // Linha 3
-        arquivoSaida << ciclos_para_encontrar_solucao << endl;   // Linha 4
+        arquivoSaida << ciclos_seu_algoritmo_total << endl;      // Linha 3: Clocks totais do SEU algoritmo
+        arquivoSaida << clock_ref_melhor_sol_csv << endl;        // Linha 4: Clocks da "melhor solução" (do CSV)
       
 
 
@@ -549,16 +581,16 @@ public:
         cout << "Arquivo gerado: " << nomeArquivoSaida << endl;
         cout << "Total de Rotas: " << todasAsRotas.size() << endl;
         cout << "Custo Total da Solucao: " << custoTotalSolucao << endl;
-        cout << "Ciclos CPU - Algoritmo Completo (para linha 3): " << ciclos_total_algoritmo << endl;
-        cout << "Ciclos CPU - Heuristica/Encontrar Solucao (para linha 4): " << ciclos_para_encontrar_solucao << endl;
-    }
+        cout << "Ciclos CPU - Seu Algoritmo Completo (para linha 3): " << ciclos_seu_algoritmo_total << endl;
+        cout << "Valor Lido do CSV para Linha 4 (clocks_melhor_sol): " << clock_ref_melhor_sol_csv << endl;
+        }
     
 };
 
 int main() {
-    Grafo g("C:/Users/User/Documents/GitHub/testeTrab/BHW1.dat");
+    Grafo g("C:/Users/User/Documents/GitHub/testeTrab/DI-NEARP-n240-Q2k.dat");
 
-    string nomeInstancia = "BHW1"; 
+    string nomeInstancia = "DI-NEARP-n240-Q2k"; 
     string nomeArquivoEntrada = nomeInstancia + ".dat";
 
     /*g.salvarEstatisticas();
