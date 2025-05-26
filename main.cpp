@@ -531,7 +531,7 @@ public:
 };
 
 int main() {
-    Grafo g("C:/Users/User/Documents/GitHub/TrabalhoGrafos/BHW1.dat");
+    Grafo g("C:/Users/arien/OneDrive/Documentos/GitHub/TrabalhoGrafos/testeTrab/BHW1.dat");
 
     string nomeInstancia = "BHW1"; 
     string nomeArquivoEntrada = nomeInstancia + ".dat";
