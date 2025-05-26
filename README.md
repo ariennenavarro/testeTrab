@@ -33,7 +33,7 @@ Este projeto realiza a leitura, processamento e análise de grafos a partir de a
 
 O programa realiza as seguintes operações:
 
-#### Etapa 1
+### Etapa 1
 
 - Leitura de arquivos `.dat` com definição de grafos
 - Construção da matriz de adjacência
@@ -53,7 +53,22 @@ O programa realiza as seguintes operações:
 
 > Todos os dados são salvos no arquivo `resultados.csv`.
 
-#### Etapa 2
+#### 📊 Parte Python (`visualizacao.ipynb`)
+
+Este script realiza:
+
+- Leitura do arquivo `resultados.csv` gerado pelo C++
+- Visualização gráfica das principais métricas do grafo com **matplotlib**
+- Geração de um gráfico de barras com:
+  - Número de vértices
+  - Número de arestas/arcos
+  - Grau máximo/mínimo
+  - Densidade
+  - Componentes conexos
+  - Caminho médio
+  - Diâmetro
+
+### Etapa 2
 
 - **Leitura de Instâncias MCGRP**: O código lê arquivos `.dat` formatados para instâncias do MCGRP, extraindo informações como capacidade do veículo, nó de depósito, número de vértices, e detalhes dos serviços requeridos (nós, arestas, arcos) e não requeridos (arestas e arcos).
 - **Construção do Grafo**: A partir dos dados lidos, constrói uma representação do grafo, incluindo a matriz de adjacência e os custos diretos entre os nós.
@@ -71,23 +86,6 @@ O programa realiza as seguintes operações:
     - A solução garante que a capacidade dos veículos não seja ultrapassada em cada rota e que cada serviço seja executado por exatamente uma rota[cite: 23, 24].
 - **Geração de Saída**: As soluções (custo total, número de rotas, tempo de execução em ciclos de CPU e tempo de referência) são salvas em arquivos `.dat` individuais na pasta `solucoes_individuais` (ou `solucoes` se a parte comentada em `main` for ativada), com o formato `sol-<nome_instancia>.dat`[cite: 29]. As soluções devem seguir um padrão de nomenclatura específico[cite: 29].
 - **Medição de Tempo**: O tempo de execução do algoritmo é medido em ciclos de CPU utilizando `__rdtsc()` para análise de desempenho. Para comparação, o código também lê um valor de referência de tempo do arquivo `reference_values.csv`.
-
----
-
-### 📊 Parte Python (`visualizacao.ipynb`)
-
-Este script realiza:
-
-- Leitura do arquivo `resultados.csv` gerado pelo C++
-- Visualização gráfica das principais métricas do grafo com **matplotlib**
-- Geração de um gráfico de barras com:
-  - Número de vértices
-  - Número de arestas/arcos
-  - Grau máximo/mínimo
-  - Densidade
-  - Componentes conexos
-  - Caminho médio
-  - Diâmetro
 
 ---
 
