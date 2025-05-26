@@ -70,19 +70,14 @@ Este script realiza:
 
 ### 📍 Etapa 2
 
-- **Leitura de Instâncias MCGRP**: O código lê arquivos .dat formatados para instâncias do MCGRP, extraindo informações como capacidade dos veículos, depósito, número de vértices e detalhes sobre serviços requeridos (nós, arestas, arcos) e não requeridos.
-- **Construção do Grafo**: Com os dados extraídos, o grafo é construído utilizando uma matriz de adjacência que representa os custos diretos entre os nós.
-- **Cálculo de Caminhos Mínimos**: Utiliza o algoritmo de Floyd-Warshall para calcular distâncias e predecessores entre todos os pares de vértices, essenciais para diversas métricas do problema.
-- **Heurística do Vizinho Mais Próximo (VM)**:
-    - Algoritmo construtivo que parte de uma solução vazia e itera até atender todas as restrições.
-    - Cada rota inicia no depósito com capacidade máxima.
-    - O serviço não atendido mais próximo e viável (dentro da capacidade) é selecionado.
-    - Custos de deslocamento e de serviço são acumulados, e a demanda é descontada da capacidade.
-    - O veículo avança para o final do serviço atendido e repete o processo até que nenhum outro serviço possa ser incluído.
-    - Caso um serviço seja visitado mais de uma vez, sua demanda e custo de serviço são contados apenas uma vez.
-    - A rota termina com o retorno ao depósito, garantindo que a capacidade não seja excedida e cada serviço seja atendido por exatamente uma rota.
-- **Geração de Saída**: As soluções geradas (custo total, número de rotas, tempo de CPU e tempo de referência) são salvas em arquivos `.dat` na pasta `solucoes_individuais` (ou solucoes, se alterado no main), seguindo o padrão `sol-<nome_instancia>.dat`.
-- **Medição de Tempo**: O tempo de execução é medido em ciclos de CPU com `__rdtsc()` e comparado com valores de referência extraídos de `reference_values.csv`.
+- Leitura de arquivos `.dat` com definição de grafos
+- Construção da matriz de adjacência com custos diretos
+- Identificação de vértices, arestas e arcos (requeridos e opcionais)
+- Cálculo de caminhos mínimos com algoritmo de **Floyd-Warshall**
+- Geração de solução inicial usando heurística do **Vizinho Mais Próximo**
+- Controle de capacidade dos veículos e atendimento de todos os serviços
+- Registro do custo total, número de rotas e tempo de execução (ciclos de CPU)
+- Exportação das soluções em arquivos `.dat` e das métricas em CSV
 
 ---
 
@@ -97,11 +92,8 @@ Este script realiza:
 
 ### Python
 
-- Python 3.x
-- Bibliotecas:
-```bash
-pip install pandas matplotlib
-```
+- Python 3.x.
+- As bibliotecas `pandas` e `matplotlib` são utilizadas.
 
 ## 👨‍💻 Autores
 
