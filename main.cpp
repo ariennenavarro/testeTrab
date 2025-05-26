@@ -588,7 +588,7 @@ public:
 };
 
 int main() {
-    Grafo g("C:/Users/User/Documents/GitHub/testeTrab/DI-NEARP-n240-Q2k.dat");
+    Grafo g("C:/Users/arien/OneDrive/Documentos/GitHub/TrabalhoGrafos/testeTrab/DI-NEARP-n240-Q2k.dat");
 
     string nomeInstancia = "DI-NEARP-n240-Q2k"; 
     string nomeArquivoEntrada = nomeInstancia + ".dat";
