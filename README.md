@@ -29,11 +29,11 @@ Este projeto realiza a leitura, processamento e análise de grafos a partir de a
 
 ## 🧠 Funcionalidades
 
-### 🧩 Parte C++ (`codigo.cpp`)
+### 📍 Etapa 1
+
+#### 🧩 Parte C++ (`codigo.cpp`)
 
 O programa realiza as seguintes operações:
-
-### Etapa 1
 
 - Leitura de arquivos `.dat` com definição de grafos
 - Construção da matriz de adjacência
@@ -68,7 +68,7 @@ Este script realiza:
   - Caminho médio
   - Diâmetro
 
-### Etapa 2
+### 📍 Etapa 2
 
 - **Leitura de Instâncias MCGRP**: O código lê arquivos `.dat` formatados para instâncias do MCGRP, extraindo informações como capacidade do veículo, nó de depósito, número de vértices, e detalhes dos serviços requeridos (nós, arestas, arcos) e não requeridos (arestas e arcos).
 - **Construção do Grafo**: A partir dos dados lidos, constrói uma representação do grafo, incluindo a matriz de adjacência e os custos diretos entre os nós.
