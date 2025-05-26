@@ -419,11 +419,28 @@ public:
     int getShortestPathCost(int u, int v) { return dist[u][v]; }
     vector<int> getCaminho(int u, int v); // Precisamos criar/adaptar
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
     void construirESalvarSolucaoNN(const string& nomeInstancia) {
+        
+        unsigned long long inicio_total_algoritmo_ciclos, fim_total_algoritmo_ciclos;
+        unsigned long long inicio_heuristica_ciclos, fim_heuristica_ciclos;
+
+        // --- INÍCIO DA MEDIÇÃO DO ALGORITMO COMPLETO (PARA LINHA 3) ---
+         inicio_total_algoritmo_ciclos = __rdtsc();
+        
+        
         calcularCaminhosMinimosComCustos(); // Garante que os caminhos foram calculados
 
-        unsigned long long inicio_ciclos_cpu, fim_ciclos_cpu;
-        inicio_ciclos_cpu = __rdtsc();
+         // --- INÍCIO DA MEDIÇÃO APENAS DA HEURÍSTICA (PARA LINHA 4) ---
+        inicio_heuristica_ciclos = __rdtsc();
 
         vector<Rota> todasAsRotas; // Vetor para guardar todas as rotas
         int servicosAtendidos = 0;
@@ -480,8 +497,16 @@ public:
             custoTotalSolucao += rotaAtual.custo_total;
         }
 
-        fim_ciclos_cpu = __rdtsc();
-        unsigned long long ciclos_cpu_heuristica = fim_ciclos_cpu - inicio_ciclos_cpu;
+          // --- FIM DA MEDIÇÃO APENAS DA HEURÍSTICA ---
+            fim_heuristica_ciclos = __rdtsc();
+
+        // O "algoritmo completo" (parte computacional) termina aqui
+        fim_total_algoritmo_ciclos = fim_heuristica_ciclos; 
+        // (Poderia ser __rdtsc() de novo se houvesse mais trabalho antes de salvar)
+
+
+        unsigned long long ciclos_total_algoritmo = fim_total_algoritmo_ciclos - inicio_total_algoritmo_ciclos;
+        unsigned long long ciclos_para_encontrar_solucao = fim_heuristica_ciclos - inicio_heuristica_ciclos;
       
 
         // --- SALVANDO A SOLUÇÃO NO ARQUIVO ---
@@ -495,8 +520,8 @@ public:
 
         arquivoSaida << custoTotalSolucao << endl;
         arquivoSaida << todasAsRotas.size() << endl;
-        arquivoSaida << "0" << endl;
-        arquivoSaida << ciclos_cpu_heuristica << endl;
+        arquivoSaida << ciclos_total_algoritmo << endl;          // Linha 3
+        arquivoSaida << ciclos_para_encontrar_solucao << endl;   // Linha 4
       
 
 
@@ -524,14 +549,14 @@ public:
         cout << "Arquivo gerado: " << nomeArquivoSaida << endl;
         cout << "Total de Rotas: " << todasAsRotas.size() << endl;
         cout << "Custo Total da Solucao: " << custoTotalSolucao << endl;
-        cout << "Ciclos de CPU da Heuristica (estimado com __rdtsc): " << ciclos_cpu_heuristica << endl;
-        // cout << "Valor para linha 3 (placeholder): " << clock_linha3_ref << endl;
+        cout << "Ciclos CPU - Algoritmo Completo (para linha 3): " << ciclos_total_algoritmo << endl;
+        cout << "Ciclos CPU - Heuristica/Encontrar Solucao (para linha 4): " << ciclos_para_encontrar_solucao << endl;
     }
     
 };
 
 int main() {
-    Grafo g("C:/Users/arien/OneDrive/Documentos/GitHub/TrabalhoGrafos/testeTrab/BHW1.dat");
+    Grafo g("C:/Users/User/Documents/GitHub/testeTrab/BHW1.dat");
 
     string nomeInstancia = "BHW1"; 
     string nomeArquivoEntrada = nomeInstancia + ".dat";
